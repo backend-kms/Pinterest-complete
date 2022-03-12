@@ -3,14 +3,16 @@
         <h1 class="Pinterest_logo">Pinterestmin</h1>
     </div>
     <div>
-        <span>nav1</span>
+         <a style ="text-decoration: none" href="{% url 'articleapp:list' %}">
+            <span>Articles</span>
+         </a>
         <span>nav2</span>
         <span>nav3</span>
         {% if not user.is_authenticated %}
-        <a href="{% url 'accountapp:login' %}?next={{ request.path }}">
+        <a style ="text-decoration: none" href="{% url 'accountapp:login' %}?next={{ request.path }}">
             <span>Login</span>
         </a>
-        <a href="{% url 'accountapp:create' %}">
+        <a style ="text-decoration: none" href="{% url 'accountapp:create' %}">
             <span>SignUp</span>
         </a>
         {% else %}
