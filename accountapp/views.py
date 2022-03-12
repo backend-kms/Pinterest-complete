@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
@@ -5,12 +6,17 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.urls import reverse, reverse_lazy
+from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DetailView, UpdateView, DeleteView
 
+from accountapp.decorators import account_ownership_required
 from accountapp.forms import AccountUpdateForm
 from accountapp.models import HelloWorld
 
 
+has_ownership = [account_ownership_required, login_required]
+
+@login_required
 def hello_world(request):
 
     if request.method == "POST":
@@ -21,7 +27,6 @@ def hello_world(request):
         new_hello_world.text = temp
         new_hello_world.save()
 
-        hello_world_list = HelloWorld.objects.all()
         return HttpResponseRedirect(reverse('accountapp:hello_world'))
     else:
         hello_world_list = HelloWorld.objects.all()
@@ -34,11 +39,15 @@ class AccountCreateView(CreateView):
     success_url = reverse_lazy('accountapp:hello_world') # 계정 생성 후 URL 경로 지정, reverse_lazy는 클래스형
     template_name = 'accountapp/create.html' # 템플릿 지정 = 적용 할 html(render같은 역할)
 
+
 class AccountDetailView(DetailView):
     model = User
     context_object_name = 'target_user'
     template_name = 'accountapp/detail.html'
 
+
+@method_decorator(has_ownership, 'get')
+@method_decorator(has_ownership, 'post')
 class AccountUpdateView(UpdateView):
     model = User
     context_object_name = 'target_user'
@@ -46,6 +55,9 @@ class AccountUpdateView(UpdateView):
     success_url = reverse_lazy('accountapp:hello_world')
     template_name = 'accountapp/update.html'
 
+
+@method_decorator(has_ownership, 'get')
+@method_decorator(has_ownership, 'post')
 class AccountDeleteView(DeleteView):
     model = User
     context_object_name = 'target_user'
