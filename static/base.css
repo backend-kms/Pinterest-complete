@@ -20,3 +20,20 @@
         font-size: 13px;
     }
 }
+
+a {
+    color: black;
+}
+
+a:hover {
+    color: black;
+    text-decoration: none;
+}
+
+.Pinterest_header_nav {
+    margin: 0 3rem;
+}
+
+.Pinterest_header_navbar {
+    margin: 1rem 0;
+}
